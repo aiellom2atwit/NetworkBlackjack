@@ -19,6 +19,7 @@ class ServerResponse():
     def SendMessage(message, ip, port, command):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        print(ip)
         sock.connect((ip, 1235))
 
         sock.sendall(bytes(command.encode('utf-8')))

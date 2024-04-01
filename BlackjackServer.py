@@ -42,35 +42,21 @@ class BlackjackServer():
             userResponse = cs.recv(1024).decode()
             if (userResponse == "Start"):
                 playerCount += 1
+                print(addr)
                 self.CreatePlayerObj(playerCount, addr, 1234)
 
             cs.sendall(bytes('Accept'.encode('utf-8')))
             cs.close()
 
-            validResponse = False
-            startGame = False
-            while (validResponse == False):
-                userResponse = str(input("Start game? (Y/N): "))
-                match userResponse.upper():
-                    case "Y":
-                        validResponse = True
-                        startGame = True
-                        break
-                    case "N":
-                        validResponse = True
-                        startGame = False
-                        break
-                print("Invalid response! Please enter (Y/N).")
 
-            #Initialize Game
-            if (startGame == True ) and ( 1 <= playerCount <= self.maxPlayers):
+            userResponse = str(input("Start game? (Y/N): "))
+            if userResponse.upper() == "Y":
                 sock.close()
-
                 self.blackjackGame = Blackjack(playerCount + 1, self.players)
-                
+                validResponse = True
+                startGame = True
                 break
                 
-    
     #Create a player object for joined players
     def CreatePlayerObj(self, playerIndex, ip, port):
         player = Player(False, playerIndex, ip, port)

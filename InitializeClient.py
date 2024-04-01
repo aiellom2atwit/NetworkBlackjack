@@ -1,5 +1,5 @@
 
-from ClientResponse import ClientResponse
+import ClientResponse
 from SendClientPacket import SendClientPacket
 
 ip = str
@@ -28,7 +28,7 @@ while (responseOk == False):
         case "Y":
             SendClientPacket.sendPacket("Start", ip, 1234)
     
-            ClientResponse(1235)
+            ClientResponse.ClientResponse(1235)
             responseOk = True
             break
         case "N":
