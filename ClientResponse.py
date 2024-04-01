@@ -41,9 +41,9 @@ class ClientResponse():
 
     def __init__(self, port):
         self.port = port
-        self.SendResponse(self.port)
+        self.SendMessage(self.port)
 
-    def SendResponse(self, port):
+    def SendMessage(self, port):
         NeedsYesOrNo = False
         NeedsHitOrStand = False
         NeedsNone = False
@@ -55,7 +55,7 @@ class ClientResponse():
 
         #Create loop to keep client checking for input
         GameEnd = False
-        while (GameEnd == False):
+        while not GameEnd:
             sock.listen(1000)
 
             cs, addr = sock.accept()
@@ -64,33 +64,36 @@ class ClientResponse():
             serverResponse = str(cs.recv(1000).decode())
             
 
-
-            if (NeedsWinner):
+            if NeedsWinner:
                 NeedsWinner = False
                 EndGame = True
                 print(serverResponse)
                 cs.sendall(bytes('ACK'.encode('utf-8')))
                 cs.close()
                 sock.close()
+                break
 
-            if (NeedsYesOrNo):
+            if NeedsYesOrNo:
                 print("Your Turn: ")
                 NeedsYesOrNo = False
                 cs.sendall(self.YesOrNo(serverResponse).encode('utf-8'))
                 cs.close()
+                break
 
-            if (NeedsHitOrStand):
+            if NeedsHitOrStand:
                 print("Your Turn: ")
                 NeedsHitOrStand = False
                 cs.sendall(bytes(self.HitOrStand(0, serverResponse).encode('utf-8')))
                 cs.close()
+                break
             
-            if (NeedsNone):
+            if NeedsNone:
                 print(serverResponse)
                 print("Ping message")
                 cs.sendall(bytes('ACK'.encode('utf-8')))
                 cs.close()
-
+                break
+            
             #Set booleans based on message
             match serverResponse:
                 case "YESORNO":
@@ -107,6 +110,7 @@ class ClientResponse():
                     cs.close()
                 case "END":
                     NeedsWinner = True
+                    GameEnd = True
                     cs.sendall(bytes('ACK'.encode('utf-8')))
                     cs.close()
 

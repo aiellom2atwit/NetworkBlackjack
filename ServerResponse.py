@@ -22,30 +22,29 @@ class ServerResponse():
         sock.connect((ip, 1235))
 
         sock.sendall(bytes(command.encode('utf-8')))
+        print(command)
 
         ACK = str(sock.recv(50).decode())
-        print(str(command))
         print(ACK)
 
         sock.close()
 
-        match str(ACK):
-            case "ACK":
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if ACK == "ACK":
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-                sock.connect((ip, 1235))
-                print("Sending message")
+            sock.connect((ip, 1235))
+            print("Sending message")
 
-                sock.sendall(bytes(command.encode('utf-8')))
+            sock.sendall(bytes(command.encode('utf-8')))
 
-                response = str(sock.recv(50).decode())
+            response = str(sock.recv(50).decode())
 
-                sock.close()
+            sock.close()
 
-                return response
-            case _:
-                sock.close()
-                print("NACK")
+            return response
+        else:
+            sock.close()
+            print("NACK")
 
 
 
