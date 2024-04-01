@@ -36,7 +36,7 @@ class ServerResponse():
             sock.connect((ip, 1235))
             print("Sending message")
 
-            sock.sendall(bytes(command.encode('utf-8')))
+            sock.sendall(bytes(message.encode('utf-8')))
 
             response = str(sock.recv(50).decode())
 

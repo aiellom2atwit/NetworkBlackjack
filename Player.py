@@ -1,7 +1,7 @@
 from Hand import Hand
 from Card import Card
 from Card import Value
-import ServerResponse
+from ServerResponse import ServerResponse
 
 class Player():
     playerIndex = 0
@@ -29,7 +29,7 @@ class Player():
         self.valueTotal += card.getValue()
 
 
-        sr = ServerResponse.ServerResponse()
+        sr = ServerResponse()
 
         sr.SendMessage(self.hand, self.ip, self.port, "NONE")
 
