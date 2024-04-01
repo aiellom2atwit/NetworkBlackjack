@@ -1,9 +1,7 @@
-
 from ClientResponse import ClientResponse
 from SendClientPacket import SendClientPacket
 
 ip = str
-
 #Have user specify IP if not localhost
 responseOk = False
 while (responseOk == False):
@@ -30,6 +28,9 @@ while (responseOk == False):
     
             ClientResponse(1235)
             responseOk = True
+
+
+            # start to listent ot the server
             break
         case "N":
             print("Connection terminated")
@@ -37,4 +38,3 @@ while (responseOk == False):
             break
         case _:
             print("Invalid Input: ", userResponse.upper, "Please enter only (Y/N).")
-    
