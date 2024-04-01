@@ -44,69 +44,70 @@ class ClientResponse():
         self.SendResponse(self.port)
 
     def SendResponse(self, port):
+        NeedsYesOrNo = False
+        NeedsHitOrStand = False
+        NeedsNone = False
+        NeedsWinner = False
+
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         sock.bind(('', port))
 
         #Create loop to keep client checking for input
-        GameOver = False
-        while (GameOver == False):
+        GameEnd = False
+        while (GameEnd == False):
             sock.listen(1000)
 
             cs, addr = sock.accept()
 
-            NeedsYesOrNo = False
-            NeedsHitOrStand = False
-            NeedsNone = False
-            NeedsWinner = False
-
-            EndGame = False
-            while not EndGame:
-                #Get message from server
-                serverResponse = str(cs.recv(1000).decode())
-
-                #Set booleans based on message
-                match serverResponse:
-                    case "YESORNO":
-                        NeedsYesOrNo = True
-                        cs.sendall(self.YESORNO(0, serverResponse).encode('utf-8'))
-                        cs.close()
-                    case "HITORSTAND":
-                        NeedsYesOrNo = True
-                        cs.sendall(bytes(self.HitOrStand(serverResponse).encode('utf-8')))
-                        cs.close()
-                    case "NONE":
-                        NeedsNone = True
-                        cs.sendall(bytes('ACK'.encode('utf-8')))
-                        cs.close()
-                    case "END":
-                        NeedsWinner = True
-                        cs.sendall(bytes('ACK'.encode('utf-8')))
-                        cs.close()
-
-
-                if (NeedsWinner):
-                    NeedsWinner = False
-                    EndGame = True
-                    print(serverResponse)
-                    cs.sendall(bytes('ACK'.encode('utf-8')))
-                    cs.close()
-                    sock.close()
-
-                if (NeedsYesOrNo):
-                    print("Your Turn: ")
-                    NeedsYesOrNo = False
-                    cs.sendall(self.YesOrNo(serverResponse).encode('utf-8'))
-                    cs.close()
-
-                if (NeedsHitOrStand):
-                    print("Your Turn: ")
-                    NeedsHitOrStand = False
-                    cs.sendall(bytes(self.HitOrStand(0, serverResponse).encode('utf-8')))
-                    cs.close()
+            #Get message from server
+            serverResponse = str(cs.recv(1000).decode())
             
-                if (NeedsNone):
-                    print(serverResponse)
-                    print("Ping message")
+
+
+            if (NeedsWinner):
+                NeedsWinner = False
+                EndGame = True
+                print(serverResponse)
+                cs.sendall(bytes('ACK'.encode('utf-8')))
+                cs.close()
+                sock.close()
+
+            if (NeedsYesOrNo):
+                print("Your Turn: ")
+                NeedsYesOrNo = False
+                cs.sendall(self.YesOrNo(serverResponse).encode('utf-8'))
+                cs.close()
+
+            if (NeedsHitOrStand):
+                print("Your Turn: ")
+                NeedsHitOrStand = False
+                cs.sendall(bytes(self.HitOrStand(0, serverResponse).encode('utf-8')))
+                cs.close()
+            
+            if (NeedsNone):
+                print(serverResponse)
+                print("Ping message")
+                cs.sendall(bytes('ACK'.encode('utf-8')))
+                cs.close()
+
+            #Set booleans based on message
+            match serverResponse:
+                case "YESORNO":
+                    NeedsYesOrNo = True
+                    cs.sendall(self.YESORNO(0, serverResponse).encode('utf-8'))
+                    cs.close()
+                case "HITORSTAND":
+                    NeedsYesOrNo = True
+                    cs.sendall(bytes(self.HitOrStand(serverResponse).encode('utf-8')))
+                    cs.close()
+                case "NONE":
+                    NeedsNone = True
                     cs.sendall(bytes('ACK'.encode('utf-8')))
                     cs.close()
+                case "END":
+                    NeedsWinner = True
+                    cs.sendall(bytes('ACK'.encode('utf-8')))
+                    cs.close()
+
+
