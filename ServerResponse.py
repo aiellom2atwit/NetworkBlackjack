@@ -2,12 +2,24 @@
 import socket
 
 class ServerResponse():
-    clientPort = 1235
 
-    def SendResponse(self, message, ip, port, command):
+    def SendToAll(message, players, port, command):
+        print(players)
+        for player in players:
+            #loop over every player
+            currentIp = player.getIp()
+            currentPort = player.getPort()
+
+            if not player.isHouse():
+                SendMessage(message, currentIp, currentPort, command)
+
+
+
+
+    def SendMessage(message, ip, port, command):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        sock.connect((ip, self.clientPort))
+        sock.connect((ip, 1235))
 
         sock.sendall(bytes(command.encode('utf-8')))
 
@@ -21,13 +33,16 @@ class ServerResponse():
             case "ACK":
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-                sock.connect((ip, self.clientPort))
+                sock.connect((ip, 1235))
+                print("Sending message")
 
                 sock.sendall(bytes(command.encode('utf-8')))
 
                 response = str(sock.recv(50).decode())
 
                 sock.close()
+
+                return response
             case _:
                 sock.close()
                 print("NACK")

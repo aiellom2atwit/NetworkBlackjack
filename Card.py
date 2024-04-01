@@ -42,7 +42,7 @@ class Card():
     def getStringSuit(self):
         return str(Suit(self.suit).name)
 
-    def readContents(self):
+    def toString(self):
         return str(self.getStringValue() + " of " + self.getStringSuit())
 
 

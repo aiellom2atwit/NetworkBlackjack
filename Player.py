@@ -2,6 +2,8 @@ from Hand import Hand
 from Card import Card
 from Card import Value
 
+from ServerResponse import ServerResponse
+
 class Player():
     playerIndex = 0
     isTurn = False
@@ -27,13 +29,26 @@ class Player():
         self.hand.AddCard(card)
         self.valueTotal += card.getValue()
 
+        ServerResponse.SendMessage(self.hand, self.ip, self.port, "NONE")
+
+    def getHand(self):
+        return self.hand
+
     def GetValueTotal(self):
         return self.valueTotal
     
     def getIp(self):
         return self.ip
 
+    def isHouse(self):
+        return self.isHouse;
+
     def getPort(self):
         return self.port
 
+    def resetHand(self):
+        self.hand = None
+        self.hand = Hand()
 
+    def getIndex(self):
+        return self.playerIndex
