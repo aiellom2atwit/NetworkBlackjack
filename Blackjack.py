@@ -1,5 +1,6 @@
 #import the library for network-related functionalities
 import socket
+from this import s
 from turtle import home
 
 from Deck import Deck
@@ -16,10 +17,12 @@ class Blackjack():
     deck = []
     players = []
 
+    sr = None
+
     def __init__(self, playerCount, players):
         self.deck = Deck()
         self.players = players
-
+        self.sr = ServerResponse()
         self.StartGame()
 
     
@@ -50,7 +53,7 @@ class Blackjack():
         print(winnerMsg)
 
         # send winners to client
-        ServerResponse.SendToAll(winnerMsg, self.players, "END", 0)
+        self.sr.SendToAll(winnerMsg, self.players, "END", 0)
 
 
         #check to end server or start new game
@@ -61,16 +64,17 @@ class Blackjack():
 
         print(hand_output)
 
-        messageFlag = ServerResponse.SendMessage(hand_output, player.getIp(), player.getPort(), "HITORSTAND")
+        messageFlag = self.sr.SendMessage(hand_output, player.getIp(), player.getPort(), "HITORSTAND")
 
         if messageFlag == "True":
             generalMessage = hand_output + "HIT"
-            ServerResponse.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
+            self.sr.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
             return True
 
         generalMessage = hand_output + "STAND"
         print(generalMessage)
-        ServerResponse.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
+
+        self.sr.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
 
         return False
 
@@ -90,7 +94,7 @@ class Blackjack():
             returnMsg = card.readContents()
             print(returnMsg)
 
-            ServerResponse.SendMessage(ServerResponse, returnMsg, player.getIp(), player.getPort(), "NONE")
+            self.sr.SendMessage(returnMsg, player.getIp(), player.getPort(), "NONE")
 
             wantsToHit = self.HitOrStand(player)
 
@@ -117,7 +121,7 @@ class Blackjack():
                 returnMsg += str(player.GetTotalValue())
             print(returnMsg)
 
-            ServerResponse.SendToAll(returnMsg, self.players, "NONE", 0)
+            self.sr.SendToAll(returnMsg, self.players, "NONE", 0)
             return player.GetTotalValue()
         
         #16 and below = hit

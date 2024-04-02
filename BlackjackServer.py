@@ -43,7 +43,7 @@ class BlackjackServer():
             if (userResponse == "Start"):
                 playerCount += 1
                 print(addr)
-                self.CreatePlayerObj(playerCount, addr, 1234)
+                self.CreatePlayerObj(playerCount, addr[0], 1234)
 
             cs.sendall(bytes('Accept'.encode('utf-8')))
             cs.close()

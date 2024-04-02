@@ -31,7 +31,8 @@ class Player():
 
         sr = ServerResponse()
 
-        sr.SendMessage(self.hand, self.ip, self.port, "NONE")
+        #print(self.hand)
+        sr.SendMessage(self.hand.PrintHand(), self.ip, self.port, "NONE")
 
     def getHand(self):
         return self.hand
@@ -49,7 +50,6 @@ class Player():
         return self.port
 
     def resetHand(self):
-        self.hand = None
         self.hand = Hand()
 
     def getIndex(self):
