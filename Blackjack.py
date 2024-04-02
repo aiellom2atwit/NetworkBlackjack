@@ -54,9 +54,6 @@ class Blackjack():
 
         # send winners to client
         self.sr.SendToAll(winnerMsg, self.players, "END", 0)
-
-
-        #check to end server or start new game
         
 
     def HitOrStand(self, player):
@@ -167,5 +164,5 @@ class Blackjack():
                             player.getPort(), "NONE")
         returnMsg += "Winner is player "
         for index, score in scores.items():
-            returnMsg += f"{index} with a score of {score}"
+            returnMsg += f"\n{index} with a score of {score}"
         return returnMsg
