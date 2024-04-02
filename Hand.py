@@ -11,14 +11,11 @@ class Hand():
         self.cardTotal += card.getValue()
         self.cardLen += 1
 
-    def PlayCard():
-        pass
-
-    def PrintHand(self):
+    def __str__(self):
         output = "---------------------"
         for card in self.cards:
             output += "\n"
-            output += card
+            output += str(card)
         output += "\nTotal Cards: "
         output += str(self.cardTotal)
         output += "\n(21 is Bust.)"

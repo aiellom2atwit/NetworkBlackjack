@@ -1,7 +1,5 @@
 #import the library for network-related functionalities
 import socket
-from this import s
-from turtle import home
 
 from Deck import Deck
 from Card import Card
@@ -16,8 +14,6 @@ from ServerResponse import ServerResponse
 class Blackjack():
     deck = []
     players = []
-
-    sr = None
 
     def __init__(self, playerCount, players):
         self.deck = Deck()
@@ -55,7 +51,7 @@ class Blackjack():
         print(winnerMsg)
 
         # send winners to client
-        self.sr.SendToAll(winnerMsg, self.players, "END", 0)
+        ServerResponse.SendToAll(winnerMsg, self.players, "END", 0)
         
 
     def HitOrStand(self, player):
@@ -63,17 +59,17 @@ class Blackjack():
 
         print(hand_output)
 
-        messageFlag = self.sr.SendMessage(hand_output, player.getIp(), player.getPort(), "HITORSTAND")
+        messageFlag = ServerResponse.SendMessage(hand_output, player.getIp(), player.getPort(), "HITORSTAND")
 
         if messageFlag == "True":
             generalMessage = hand_output + "HIT"
-            self.sr.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
+            ServerResponse.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
             return True
 
         generalMessage = hand_output + "STAND"
         print(generalMessage)
 
-        self.sr.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
+        ServerResponse.SendMessage(generalMessage, player.getIp(), player.getPort(), player.playerIndex)
 
         return False
 
@@ -93,7 +89,7 @@ class Blackjack():
             returnMsg = card.readContents()
             print(returnMsg)
 
-            self.sr.SendMessage(returnMsg, player.getIp(), player.getPort(), "NONE")
+            ServerResponse.SendMessage(returnMsg, player.getIp(), player.getPort(), "NONE")
 
             wantsToHit = self.HitOrStand(player)
 
@@ -120,7 +116,7 @@ class Blackjack():
                 returnMsg += str(player.getTotal())
             print(returnMsg)
 
-            self.sr.SendToAll(returnMsg, self.players, "NONE", 0)
+            ServerResponse.SendToAll(returnMsg, self.players, "NONE", 0)
             return player.getTotal()
         
         #16 and below = hit
@@ -131,16 +127,14 @@ class Blackjack():
           
 
     def generateStartingHand(self, players, cardAmount):
-        msgResponse = ""
         for i in range(0, cardAmount):
             for player in players:
                 drawnCard = self.deck.DrawCard()
                 player.AddCard(drawnCard)
-                msgResponse += str(drawnCard) + "\n"
-                
-        msgResponse += "Total Value: " + str(player.getHand().totalValue())
-        sr = ServerResponse()
-        sr.SendMessage(str(drawnCard), player.getIp(), player.getPort(), "NONE")
+        print("Inital Player Cards:\n")
+        for player in players:
+            if not player.isHouse():
+                ServerResponse.SendMessage(str(player), player.getIp(), player.getPort(), "NONE")
         return players
 
     def CheckWinner(self, players):

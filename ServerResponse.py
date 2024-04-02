@@ -3,7 +3,9 @@ import socket
 
 class ServerResponse():
 
-    def SendToAll(self, message, players, port, command):
+    @staticmethod
+    def SendToAll(message, players, command, index):
+        print("Sending message \"" + message + "\" to all clients.")
         print(players)
         for player in players:
             #loop over every player
@@ -11,23 +13,25 @@ class ServerResponse():
             currentPort = player.getPort()
 
             if not player.isHouse():
-                self.SendMessage(message, currentIp, currentPort, command)
+                SendMessage(message, currentIp, currentPort, command)
 
 
 
-
-    def SendMessage(self, message, ip, port, command):
+    @staticmethod
+    def SendMessage(message, ip, port, command):
+        print("Server Sending Message \"" + message + "\" to Client " + str(ip))
+        print("Sending Command: " + str(command))
         print(port)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         print(ip)
         sock.connect((ip, 1235))
 
-        sock.sendall(bytes(command.encode('utf-8')))
+        sock.sendall(bytes(str(command).encode('utf-8')))
         print(command)
 
         ACK = str(sock.recv(50).decode())
-        print(ACK)
+        print("ACK RESPONSE: " + ACK)
 
         sock.close()
 

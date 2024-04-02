@@ -25,7 +25,7 @@ class Player():
         self.isHosue = isHouse
 
     def AddCard(self, card):
-        self.hand.AddCard(card)
+        self.getHand().AddCard(card)
         self.valueTotal += card.getValue()
 
 
@@ -54,3 +54,11 @@ class Player():
 
     def getIndex(self):
         return self.playerIndex
+
+    def __str__(self):
+        output =  "Player " + str(self.playerIndex) + "\n"
+        output += "------------------\n"
+        output += str(self.getHand()) + "\n"
+        output += "Total Card Value: " + str(self.valueTotal) + "\n"
+        output += "------------------\n"
+        return output

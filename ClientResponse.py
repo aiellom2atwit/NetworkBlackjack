@@ -19,16 +19,6 @@ class ClientResponse():
         self.port = port
         self.SendMessage(self.port)
 
-        print("Listen to server for command")
-
-        command: str = None
-
-        match command:
-            case "HITORSTAND":
-                self.HitOrStand()
-            case _:
-                print("test")
-
     def YesOrNo(self, message):
         print(message)
         print("YeOrNO")
@@ -67,6 +57,7 @@ class ClientResponse():
 
 
     def SendMessage(self, port):
+        print("Sending Message from client...")
         NeedsYesOrNo = False
         NeedsHitOrStand = False
         NeedsNone = False
@@ -88,15 +79,16 @@ class ClientResponse():
             
 
             if NeedsWinner:
+                print(serverResponse)
                 NeedsWinner = False
                 EndGame = True
-                print(serverResponse)
                 cs.sendall(bytes('ACK'.encode('utf-8')))
                 cs.close()
                 sock.close()
                 break
 
             if NeedsYesOrNo:
+                print(serverResponse)
                 print("Your Turn: ")
                 NeedsYesOrNo = False
                 cs.sendall(self.YesOrNo(serverResponse).encode('utf-8'))
@@ -104,6 +96,7 @@ class ClientResponse():
                 break
 
             if NeedsHitOrStand:
+                print(serverResponse)
                 print("Your Turn: ")
                 NeedsHitOrStand = False
                 cs.sendall(bytes(self.HitOrStand(0, serverResponse).encode('utf-8')))
@@ -111,12 +104,13 @@ class ClientResponse():
                 break
             
             if NeedsNone:
+                print(serverResponse)
                 NeedsNone = False
                 print("Ping message")
-                print(serverResponse)
+                
                 cs.sendall(bytes('ACK'.encode('utf-8')))
                 cs.close()
-                break
+                
             
             #Set booleans based on message
             match serverResponse:
@@ -137,3 +131,4 @@ class ClientResponse():
                     GameEnd = True
                     cs.sendall(bytes('ACK'.encode('utf-8')))
                     cs.close()
+                    sock.close()
