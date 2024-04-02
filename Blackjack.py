@@ -35,12 +35,14 @@ class Blackjack():
         self.players = self.generateStartingHand(self.players, initialCards)
         #send cards to clients
         
+        print(self.players)
         #turn LOOP1
         for player in self.players:
             if player.isHouse():
                 self.HouseTurn(player)
                 #House turn
             else:
+                print("Player Turn")
                 #not house
                 self.PlayerTurn(player)
         
@@ -129,10 +131,16 @@ class Blackjack():
           
 
     def generateStartingHand(self, players, cardAmount):
+        msgResponse = ""
         for i in range(0, cardAmount):
             for player in players:
                 drawnCard = self.deck.DrawCard()
                 player.AddCard(drawnCard)
+                msgResponse += drawnCard.toString() + "\n"
+                
+        msgResponse += "Total Value: " + str(player.getHand().totalValue())
+        sr = ServerResponse()
+        sr.SendMessage(drawnCard.toString(), player.getIp(), player.getPort(), "NONE")
         return players
 
     def CheckWinner(self, players):
