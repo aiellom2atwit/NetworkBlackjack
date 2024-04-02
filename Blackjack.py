@@ -136,11 +136,11 @@ class Blackjack():
             for player in players:
                 drawnCard = self.deck.DrawCard()
                 player.AddCard(drawnCard)
-                msgResponse += drawnCard.toString() + "\n"
+                msgResponse += str(drawnCard) + "\n"
                 
         msgResponse += "Total Value: " + str(player.getHand().totalValue())
         sr = ServerResponse()
-        sr.SendMessage(drawnCard.toString(), player.getIp(), player.getPort(), "NONE")
+        sr.SendMessage(str(drawnCard), player.getIp(), player.getPort(), "NONE")
         return players
 
     def CheckWinner(self, players):

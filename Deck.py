@@ -30,8 +30,7 @@ class Deck():
 
     #Takes array of cards and shuffles it randomly
     def Shuffle(self, cards):
-        random.shuffle(self.cards)
-        return self.cards
+        return random.sample(cards, len(cards))
 
 
     def IsEmpty(self):

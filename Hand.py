@@ -18,7 +18,7 @@ class Hand():
         output = "---------------------"
         for card in self.cards:
             output += "\n"
-            output += card.toString()
+            output += card
         output += "\nTotal Cards: "
         output += str(self.cardTotal)
         output += "\n(21 is Bust.)"
