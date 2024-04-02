@@ -1,8 +1,8 @@
 
-import ClientResponse
+from ClientResponse import ClientResponse
 from SendClientPacket import SendClientPacket
 
-ip = str
+ip : str
 
 #Have user specify IP if not localhost
 responseOk = False
@@ -28,13 +28,11 @@ while (responseOk == False):
         case "Y":
             SendClientPacket.sendPacket("Start", ip, 1234)
     
-            ClientResponse.ClientResponse(1235)
+            ClientResponse()
             responseOk = True
-            break
         case "N":
             print("Connection terminated")
             responseOk = True
-            break
         case _:
             print("Invalid Input: \"{userResponse.upper}\" Please enter only (Y/N).")
     

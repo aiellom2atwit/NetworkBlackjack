@@ -3,7 +3,7 @@ import socket
 
 class ClientResponse():
     #Handles hit and stand functionality for client along with ack
-    port: int
+    port = 1235
 
     """
      def __init__ to listen to the server , then send the message back to server  
@@ -15,9 +15,90 @@ class ClientResponse():
 
 
 
-    def __init__(self, port):
-        self.port = port
-        self.SendMessage(self.port)
+    def __init__(self):
+        #self.port = port
+        self.ClientLoop(self.port)
+
+
+    def ClientLoop(self, port):
+        NeedsYesOrNo = False
+        NeedsHitOrStand = False
+        NeedsNone = False
+        NeedsWinner = False
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        sock.bind(('', port))
+
+        GameEnd = False
+        while not GameEnd:
+            print("Waiting for message from server...")
+
+            sock.listen(1000)
+
+            cs, addr = sock.accept()
+
+            #Get message from server
+            serverResponse = str(cs.recv(1000).decode())
+            print("Recieved message from server.")
+
+            if NeedsWinner:
+                print(serverResponse)
+                NeedsWinner = False
+                GameEnd = True
+                self.SendMessage('ACK', cs)
+                cs.close()
+                sock.close()
+                break
+
+            if NeedsYesOrNo:
+                print("Your Turn: ")
+                NeedsYesOrNo = False
+                sendMessage = self.YesOrNo(serverResponse)
+                self.SendMessage(sendMessage, cs)
+                cs.close()
+                break
+
+            if NeedsHitOrStand:
+                print("Your Turn: ")
+                NeedsHitOrStand = False
+                sendMessage = self.HitOrStand(serverResponse)
+                self.SendMessage(sendMessage, cs)
+                cs.close()
+                break
+            
+            if NeedsNone:
+                print(serverResponse)
+                NeedsNone = False
+                print("Ping message")
+                
+                self.SendMessage('ACK', cs)
+                cs.close()
+            
+            #Set booleans based on message
+            match serverResponse:
+                case "YESORNO":
+                    NeedsYesOrNo = True
+                    sendMessage = self.YesOrNo(serverResponse)
+                    self.SendMessage(sendMessage, cs)
+                    cs.close()
+                case "HITORSTAND":
+                    NeedsYesOrNo = True
+                    sendMessage = self.HitOrStand(serverResponse)
+                    self.SendMessage(sendMessage, cs)
+                    cs.close()
+                case "NONE":
+                    NeedsNone = True
+                    self.SendMessage('ACK', cs)
+                    cs.close()
+                case "END":
+                    NeedsWinner = True
+                    GameEnd = True
+                    self.SendMessage('ACK', cs)
+                    cs.close()
+                    sock.close()
+            
+
 
     def YesOrNo(self, message):
         print(message)
@@ -55,80 +136,12 @@ class ClientResponse():
 
 
 
+    def SendMessage(self, message : str, cs):
+        encodedMessage = message.encode('utf-8')
+        
+        cs.sendall(bytes(encodedMessage))
 
-    def SendMessage(self, port):
-        print("Sending Message from client...")
-        NeedsYesOrNo = False
-        NeedsHitOrStand = False
-        NeedsNone = False
-        NeedsWinner = False
-
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        sock.bind(('', port))
-
-        #Create loop to keep client checking for input
-        GameEnd = False
-        while not GameEnd:
-            sock.listen(1000)
-
-            cs, addr = sock.accept()
-
-            #Get message from server
-            serverResponse = str(cs.recv(1000).decode())
             
-
-            if NeedsWinner:
-                print(serverResponse)
-                NeedsWinner = False
-                EndGame = True
-                cs.sendall(bytes('ACK'.encode('utf-8')))
-                cs.close()
-                sock.close()
-                break
-
-            if NeedsYesOrNo:
-                print(serverResponse)
-                print("Your Turn: ")
-                NeedsYesOrNo = False
-                cs.sendall(self.YesOrNo(serverResponse).encode('utf-8'))
-                cs.close()
-                break
-
-            if NeedsHitOrStand:
-                print(serverResponse)
-                print("Your Turn: ")
-                NeedsHitOrStand = False
-                cs.sendall(bytes(self.HitOrStand(0, serverResponse).encode('utf-8')))
-                cs.close()
-                break
-            
-            if NeedsNone:
-                print(serverResponse)
-                NeedsNone = False
-                print("Ping message")
-                
-                cs.sendall(bytes('ACK'.encode('utf-8')))
-                cs.close()
                 
             
-            #Set booleans based on message
-            match serverResponse:
-                case "YESORNO":
-                    NeedsYesOrNo = True
-                    cs.sendall(self.YesOrNo(0, serverResponse).encode('utf-8'))
-                    cs.close()
-                case "HITORSTAND":
-                    NeedsYesOrNo = True
-                    cs.sendall(bytes(self.HitOrStand(serverResponse).encode('utf-8')))
-                    cs.close()
-                case "NONE":
-                    NeedsNone = True
-                    cs.sendall(bytes('ACK'.encode('utf-8')))
-                    cs.close()
-                case "END":
-                    NeedsWinner = True
-                    GameEnd = True
-                    cs.sendall(bytes('ACK'.encode('utf-8')))
-                    cs.close()
-                    sock.close()
+            

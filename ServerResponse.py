@@ -5,7 +5,7 @@ class ServerResponse():
 
     @staticmethod
     def SendToAll(message, players, command, index):
-        print("Sending message \"" + message + "\" to all clients.")
+        print("Sending message to all clients.")
         print(players)
         for player in players:
             #loop over every player
@@ -19,12 +19,12 @@ class ServerResponse():
 
     @staticmethod
     def SendMessage(message, ip, port, command):
-        print("Server Sending Message \"" + message + "\" to Client " + str(ip))
+        print("Server Sending Message to Client " + str(ip))
         print("Sending Command: " + str(command))
-        print(port)
+        #print(port)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        print(ip)
+        #print(ip)
         sock.connect((ip, 1235))
 
         sock.sendall(bytes(str(command).encode('utf-8')))

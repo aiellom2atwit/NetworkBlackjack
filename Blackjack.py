@@ -55,7 +55,7 @@ class Blackjack():
         
 
     def HitOrStand(self, player):
-        hand_output = player.getHand().PrintHand()
+        hand_output = str(player.getHand())
 
         print(hand_output)
 
@@ -74,13 +74,13 @@ class Blackjack():
         return False
 
 
-    def HitCard(self, player):
+    def PlayerTurn(self, player):
         #Hit sequential cards until player requests to stop
-        wantsToHit = self.HitOrStand(player)
+        turnOver = not self.HitOrStand(player)
         playerIndex = player.playerIndex
         returnMsg = ""
 
-        while (wantsToHit):
+        while not turnOver:
             card = self.deck.DrawCard()
             returnMsg += card.toString()
 
@@ -91,11 +91,8 @@ class Blackjack():
 
             ServerResponse.SendMessage(returnMsg, player.getIp(), player.getPort(), "NONE")
 
-            wantsToHit = self.HitOrStand(player)
+            turnOver = not self.HitOrStand(player)
 
-
-    def PlayerTurn(self, player):
-        self.HitCard(player)
 
     def HouseTurn(self, player):
         returnMsg = ""
@@ -105,7 +102,7 @@ class Blackjack():
             returnMsg += "RESET"
             player.resetHand()
             player = self.generateStartingHand(player, 2)
-            return self.HouseTurn()
+            return self.HouseTurn(player)
         #17 and above = stand
         if (player.getTotal() >= 17):
             #21 = House wins
