@@ -3,11 +3,35 @@ import socket
 
 class ClientResponse():
     #Handles hit and stand functionality for client along with ack
-    port : int
+    port: int
+
+    """
+     def __init__ to listen to the server , then send the message back to server  
+    
+    
+    """
+
+
+
+
+
+    def __init__(self, port):
+        self.port = port
+        self.SendMessage(self.port)
+
+        print("Listen to server for command")
+
+        command: str = None
+
+        match command:
+            case "HITORSTAND":
+                self.HitOrStand()
+            case _:
+                print("test")
 
     def YesOrNo(self, message):
         print(message)
-
+        print("YeOrNO")
         validInput = False
         while (validInput == False):
             userResponse = str(input("(Y/N): "))
@@ -24,6 +48,7 @@ class ClientResponse():
     def HitOrStand(self, message):
         print(message)
 
+        print("HitOrStand")
         validInput = False
         while (validInput == False):
             userResponse = str(input("Hit or Stand (H/S): "))
@@ -39,9 +64,7 @@ class ClientResponse():
         
 
 
-    def __init__(self, port):
-        self.port = port
-        self.SendMessage(self.port)
+
 
     def SendMessage(self, port):
         NeedsYesOrNo = False
@@ -114,5 +137,3 @@ class ClientResponse():
                     GameEnd = True
                     cs.sendall(bytes('ACK'.encode('utf-8')))
                     cs.close()
-
-
