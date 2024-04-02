@@ -29,16 +29,16 @@ class Player():
         self.valueTotal += card.getValue()
 
 
-        sr = ServerResponse()
+        #sr = ServerResponse()
 
         #print(self.hand)
-        sr.SendMessage(self.hand.PrintHand(), self.ip, self.port, "NONE")
+        #sr.SendMessage(self.hand.PrintHand(), self.ip, self.port, "NONE")
 
     def getHand(self):
         return self.hand
 
-    def GetValueTotal(self):
-        return self.valueTotal
+    def getTotal(self):
+        return self.getHand().length()
     
     def getIp(self):
         return self.ip

@@ -18,7 +18,7 @@ while (responseOk == False):
         case _:
             print("Invalid Input: \"", userResponse, "\"\nPlease enter only (Y/N).")
 
-port = 1234
+port = 1235
 
 #Ask the Client if they would like to connect to the server
 responseOk = False
@@ -36,5 +36,5 @@ while (responseOk == False):
             responseOk = True
             break
         case _:
-            print("Invalid Input: ", userResponse.upper, "Please enter only (Y/N).")
+            print("Invalid Input: \"{userResponse.upper}\" Please enter only (Y/N).")
     

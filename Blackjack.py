@@ -27,7 +27,7 @@ class Blackjack():
 
     
     def CheckBust(self, player):
-        return (player.GetTotalValue() > 21)
+        return (player.getTotal() > 21)
 
     def StartGame(self):
         #Draw initial cards
@@ -49,7 +49,7 @@ class Blackjack():
         houseValue = self.HouseTurn(housePlayer)
 
         # check for winners
-        winnerMsg = self.checkWinner(self.players)
+        winnerMsg = self.CheckWinner(self.players)
         print(winnerMsg)
 
         # send winners to client
@@ -106,26 +106,26 @@ class Blackjack():
         returnMsg = ""
         #Method to determine what the house does on a turn
         #If House starts with 21, reset
-        if (player.GetTotalValue() == 21 and player.getHand().getTotalCardValue() == 2):
+        if (player.getTotal() == 21 and player.getHand().length() == 2):
             returnMsg += "RESET"
             player.resetHand()
             player = self.generateStartingHand(player, 2)
             return self.HouseTurn()
         #17 and above = stand
-        if (player.GetTotalValue() >= 17):
+        if (player.getTotal() >= 17):
             #21 = House wins
-            if (player.GetTotalValue() == 21):
-                returnMsg += str(player.GetTotalValue())
+            if (player.getTotal() == 21):
+                returnMsg += str(player.getTotal())
             #>21 House busts
-            if (player.GetTotalValue() >= 21):
-                returnMsg += str(player.GetTotalValue())
+            if (player.getTotal() >= 21):
+                returnMsg += str(player.getTotal())
             print(returnMsg)
 
             self.sr.SendToAll(returnMsg, self.players, "NONE", 0)
-            return player.GetTotalValue()
+            return player.getTotal()
         
         #16 and below = hit
-        if (player.GetTotalValue() <= 16):
+        if (player.getTotal() <= 16):
             drawnCard = self.deck.DrawCard()
             player.AddCard(drawnCard)
             return self.HouseTurn(player)
@@ -146,12 +146,12 @@ class Blackjack():
         returnMsg += "GAME RESULT"
         for player in players:
             if player.isHouse():
-                houseScore = player.GetTotalValue()
+                houseScore = player.getTotal()
                 index = player.getIndex()
                 scores[index] = houseScore
                 #isHouse
             else:
-                score = player.GetTotalValue()
+                score = player.getTotal()
                 index = player.getIndex()
                 scores[index] = score
                 

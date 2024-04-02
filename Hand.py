@@ -3,11 +3,13 @@ from Deck import Deck
 
 class Hand():
     cardTotal = 0
+    cardLen = 0
     cards = []
 
     def AddCard(self, card):
         self.cards.append(card)
         self.cardTotal += card.getValue()
+        self.cardLen += 1
 
     def PlayCard():
         pass
@@ -23,5 +25,8 @@ class Hand():
 
         return output
 
-    def getTotalCardValue(self):
+    def totalValue(self):
         return self.cardTotal
+
+    def length(self):
+        return self.cardLen

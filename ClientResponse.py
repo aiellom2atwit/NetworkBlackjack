@@ -3,7 +3,7 @@ import socket
 
 class ClientResponse():
     #Handles hit and stand functionality for client along with ack
-    port = int
+    port : int
 
     def YesOrNo(self, message):
         print(message)
@@ -88,8 +88,9 @@ class ClientResponse():
                 break
             
             if NeedsNone:
-                print(serverResponse)
+                NeedsNone = False
                 print("Ping message")
+                print(serverResponse)
                 cs.sendall(bytes('ACK'.encode('utf-8')))
                 cs.close()
                 break
@@ -98,7 +99,7 @@ class ClientResponse():
             match serverResponse:
                 case "YESORNO":
                     NeedsYesOrNo = True
-                    cs.sendall(self.YESORNO(0, serverResponse).encode('utf-8'))
+                    cs.sendall(self.YesOrNo(0, serverResponse).encode('utf-8'))
                     cs.close()
                 case "HITORSTAND":
                     NeedsYesOrNo = True
